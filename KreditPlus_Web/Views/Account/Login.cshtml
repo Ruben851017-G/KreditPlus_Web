@@ -1,0 +1,38 @@
+﻿@model KreditPlus_Web.Models.LoginModel
+@{  
+    ViewBag.Title = "Login";
+    var returnUrl = @Context.Request.Query["returnurl"];
+}
+
+<div class="text-center">
+    <h1 class="display-4">Welcome</h1>
+    <p class="px-2">Welcome back, please login to your account Kredit Plus.</p>
+    <div class="card-content" style="margin-top:5%">
+        @if (TempData["Message"] != null)
+        {
+            <div class="text-info">
+                @TempData["Message"]
+            </div>
+        }
+        @using (Html.BeginForm("Login", "Account", new { ReturnUrl = returnUrl}, FormMethod.Post))
+        {
+            @Html.AntiForgeryToken()
+            
+            <p class="px-2">
+                <fieldset class="row d-flex justify-content-center">
+                <input type="text" class="form-control" style="width:40%" name="UserName" placeholder="username" required>
+            </fieldset>
+            </p>
+            
+            <p class="px-2">
+                <fieldset class="row d-flex justify-content-center">
+                <input type="text" class="form-control" style="width:40%" name="Password" placeholder="password" required>
+            </fieldset>
+            </p>
+            <p class="px-2">
+                <button type="submit" class="btn btn-primary float-center btn-inline">Login</button>
+                <div class=""><a href= @Url.Action("Register","Users") class="card-link">Register New User</a></div>
+            </p>
+        }
+    </div>
+</div>

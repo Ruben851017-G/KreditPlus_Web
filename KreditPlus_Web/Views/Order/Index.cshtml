@@ -1,0 +1,170 @@
+﻿@model IEnumerable<KreditPlus_Web.Models.Order>
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.Title = "Menu Order";
+}
+
+@if (TempData["Message"] != null)
+ {
+     <div class="text-info">
+         @TempData["Message"]
+     </div>
+ }
+
+
+ <div class="panel panel-inverse">
+     <div class="panel-heading">
+        <div class="panel-heading-btn">
+            <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-default" data-click="panel-expand"><i class="fa fa-expand"></i></a>
+            <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-success" data-click="panel-reload"><i class="fa fa-redo"></i></a>
+            <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-warning" data-click="panel-collapse"><i class="fa fa-minus"></i></a>
+            <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-danger" data-click="panel-remove"><i class="fa fa-times"></i></a>
+        </div>
+        <h4 class="panel-title">@ViewBag.Title</h4>
+    </div>
+    <div class="panel panel-default" style="width: 100%; padding: 10px; margin: 10px">
+        <div id="Tabs" role="tabpanel">
+            <ul class="nav nav-tabs" role="tablist">
+                <li class="active"><a href="#order" aria-controls="order" role="tab" data-toggle="tab">
+                    List Order</a></li>
+                @*<li><a href="#createorder" aria-controls="createorder" role="tab" data-toggle="tab">Create Order</a></li>*@
+            </ul>
+                <div class="tab-content" style="padding-top: 20px">
+                    <div role="tabpanel" class="tab-pane active" id="order">
+                        <div class="panel-body">
+                            <table id="data-table-buttons" class="table table-striped table-bordered" width="100%" cellspacing="0">
+                                <thead class="text-center">
+                                    <tr>
+                                        <th hidden>@Html.DisplayNameFor(model => model.OrderId)</th>
+                                        <th>@Html.DisplayNameFor(model => model.OrderNumber)</th>
+                                        <th>@Html.DisplayNameFor(model => model.OrderDate)</th>                                     
+                                        <th>@Html.DisplayNameFor(model => model.Waiters)</th>
+                                        <th>@Html.DisplayNameFor(model => model.TableNumber)</th>
+                                        <th>@Html.DisplayNameFor(model => model.Total)</th>
+                                        <th>@Html.DisplayNameFor(model => model.StatusOrder)</th>
+                                        <th>@Html.DisplayNameFor(model => model.ClosedByName)</th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var item in Model)
+                                    {
+                                        <tr class="text-center">
+                                            <td hidden>
+                                                @Html.DisplayFor(modelItem => item.OrderId)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.OrderNumber)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.OrderDate)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.Waiters)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.TableNumber)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.Total)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.StatusOrder)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.ClosedByName)
+                                            </td>
+                                            <td>                      
+                                                @Html.ActionLink("Edit", "Edit", "Order", new { id = item.OrderId }, new { @class = "btn btn-success m-b-5" })
+                                                @Html.ActionLink("ClosedBill","ClosedBill","Order", new { id = item.OrderId }, new { @class = "btn btn-danger m-b-5",onclick = "ClosedBillConfirm("+item.OrderId+");return false;"})                        
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                @*<div role="tabpanel" class="tab-pane" id="createorder">
+                 @Html.PartialAsync("_PartialOrder")*@
+            </div>
+        </div>
+    </div>
+</div>
+
+ @section scripts{
+    <script type="text/javascript">
+        $(document).ready(function () {
+            App.init();
+            var handleDataTableButtons = function () {
+                "use strict";         
+                if ($('#data-table-buttons').length !== 0) {          
+                    $('#data-table-buttons thead tr').clone(true).appendTo('#data-table-buttons thead');
+                    $('#data-table-buttons thead tr:eq(1) th').each(function (i) {
+                        var title = $(this).text();
+                        $(this).html('<input type="text" style="width:80px" placeholder="Search ' + title + '" />');          
+                        $('input', this).on('keyup change', function () {
+                            if (table.column(i).search() !== this.value) {
+                                table
+                                    .column(i)
+                                    .search(this.value)
+                                    .draw();
+                            }
+                        });
+                    });
+                        
+                    var table = $('#data-table-buttons').DataTable({
+                        dom: 'lBfrtip',
+                        searching:true,
+                        fixedHeader:true,
+                        buttons: [         
+                            { extend: 'csv', className: 'btn-sm' },
+                            { extend: 'excel', className: 'btn-sm' }           
+                        ],
+                        responsive: true,
+                        "scrollY": "500px",
+                        "scrollX": true,
+                        "scrollCollapse": true,
+                        orderCellsTop: true,
+                        fixedHeader: true
+                    });         
+                }
+            };
+            
+            var TableManageButtons = function () {
+                "use strict";
+                return {
+                    init: function () {
+                        handleDataTableButtons();
+                    }
+                };
+            }();
+            
+            TableManageButtons.init();
+        });
+        function ClosedBillConfirm(id) 
+        {
+            var user_type = '@ViewBag.UserType';
+            if (user_type == 'Admin' || user_type == 'Cashier') {
+                var ans = confirm("Are you sure you want to Close Bill this Order?"); 
+                if (ans) {  
+                    $.ajax({  
+                        url: "/Order/ClosedBill/" + ID,  
+                        type: "POST",  
+                        contentType: "application/json;charset=UTF-8",  
+                        dataType: "json",  
+                        success: function (result) {  
+                            loadData();  
+                        },  
+                        error: function (errormessage) {  
+                            alert(errormessage.responseText);  
+                        }  
+                    });  
+                }  
+            }
+            else {
+                alert("You are not Authenticate to use this menu");
+                return false;
+            }        
+        }
+    </script>
+}

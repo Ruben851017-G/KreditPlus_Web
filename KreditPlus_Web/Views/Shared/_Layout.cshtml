@@ -1,0 +1,111 @@
+﻿@{
+    var username = Context.Session.GetString("user_name");
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - KreditPlus_Web</title>
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet" />
+    <link href="~/asset/plugins/jquery-ui/jquery-ui.min.css" rel="stylesheet" />
+    <link href="~/asset/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="~/asset/css/style.min.css">
+    <link rel="stylesheet" href="~/asset/css/style-responsive.min.css">
+    <link href="~/asset/css/default.css" rel="stylesheet" id="theme" />
+    <link href="~/asset/plugins/font-awesome/css/all.min.css" rel="stylesheet" />
+    <link href="~/asset/plugins/DataTables/media/css/dataTables.bootstrap.min.css" rel="stylesheet" />
+    <link href="~/asset/plugins/DataTables/extensions/Responsive/css/responsive.bootstrap.min.css" rel="stylesheet" />
+    <link href="~/asset/plugins/simple-line-icons/css/simple-line-icons.css" rel="stylesheet">
+</head>
+<body>
+    <header>
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+            <div class="container-fluid">
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                        aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+                    <ul class="navbar-nav flex-grow-1">
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Menu" asp-action="Index">Menu</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Order" asp-action="_PartialOrder">CreateOrder</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Order" asp-action="Index">ListOrder</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="OrderStatus" asp-action="Index">OrderStatus</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Transactions" asp-action="Index">Transactions</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Users" asp-action="Index">Users</a>
+                        </li>
+                    </ul>
+                </div>
+                @if(@username != null){
+                    <span>
+                    Welcome : @if (@username != null){@username}
+                </span>
+                <span style="width:5px">
+                    &nbsp;
+                </span>   
+                <span>
+                   <a href="@Url.Action("SignOut","Account")" style="text-decoration:none !important">Logout</a>
+                </span>
+                }
+                
+            </div>
+        </nav>
+    </header>
+    <div id="content" class="container">
+        @RenderBody()
+    </div>
+    <div class="loaderbody" id="loaderbody">
+        <div class="loader"></div>
+    </div>
+
+    @*<footer class="border-top footer text-muted">
+        <div class="container">
+            &copy; 2022 - KreditPlus_Web - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+        </div>
+    </footer>*@
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script src="~/asset/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="~/asset/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+    <script src="~/asset/plugins/js-cookie/js.cookie.js"></script>
+    <script src="~/asset/js/apple.min.js"></script>
+    <script src="~/asset/js/apps.js"></script>
+    <script src="//cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
+    <script src="https://cdn.datatables.net/plug-ins/1.10.20/sorting/datetime-moment.js"></script>
+    <script src="https://cdn.datatables.net/responsive/2.4.0/js/dataTables.responsive.min.js"></script>
+    <script src="https://editor.datatables.net/extensions/Editor/js/dataTables.editor.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+    <script src="https://cdn.datatables.net/select/1.5.0/js/dataTables.select.min.js"></script>
+
+    <script src="~/asset/plugins/DataTables/media/js/jquery.dataTables.js"></script>
+    <script src="~/asset/plugins/DataTables/media/js/dataTables.bootstrap.min.js"></script>
+    <script src="~/asset/plugins/DataTables/extensions/Responsive/js/dataTables.responsive.min.js"></script>
+    <script src="~/asset/plugins/DataTables/extensions/Buttons/js/dataTables.buttons.min.js"></script>
+    <script src="~/asset/plugins/DataTables/extensions/Buttons/js/dataTables.buttons.min.js"></script>
+    <script src="~/asset/plugins/DataTables/extensions/Buttons/js/buttons.bootstrap.min.js"></script>
+    <script src="~/asset/plugins/DataTables/extensions/Buttons/js/buttons.flash.min.js"></script>
+    <script src="~/asset/plugins/DataTables/extensions/Buttons/js/jszip.min.js"></script>
+    <script src="~/asset/plugins/DataTables/extensions/Buttons/js/pdfmake.min.js"></script>
+    <script src="~/asset/plugins/DataTables/extensions/Buttons/js/vfs_fonts.min.js"></script>
+    <script src="~/asset/plugins/DataTables/extensions/Buttons/js/buttons.html5.min.js"></script>
+    <script src="~/asset/plugins/DataTables/extensions/Buttons/js/buttons.print.min.js"></script>
+    <script src="~/asset/plugins/DataTables/extensions/Responsive/js/dataTables.responsive.min.js"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

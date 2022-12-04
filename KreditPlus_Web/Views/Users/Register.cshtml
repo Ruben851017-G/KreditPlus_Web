@@ -1,0 +1,46 @@
+﻿@model KreditPlus_Web.Models.Users
+@{  
+    ViewBag.Title = "Register New User";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Register New User</h1>
+    <div class="card-content" style="margin-top:5%">
+        @if (TempData["Message"] != null)
+        {
+            <div class="text-info">
+                @TempData["Message"]
+            </div>
+        }
+        @using (Html.BeginForm("Register", "Users", FormMethod.Post))
+        {
+            @Html.AntiForgeryToken()
+            
+            <p class="px-2">
+                <fieldset class="row d-flex justify-content-center">
+                <input type="text" class="form-control" style="width:40%" name="UserName" placeholder="User Name" required>
+            </fieldset>
+            </p>
+            <p class="px-2">
+                <fieldset class="row d-flex justify-content-center">
+                <input type="text" class="form-control" style="width:40%" name="UserFullName" placeholder="User Full Name" required>
+            </fieldset>
+            </p>
+            <p class="px-2">
+                <fieldset class="row d-flex justify-content-center">
+                @Html.DropDownListFor(m => m.UserType, new SelectList(ViewBag.ListUserType, "UserTypeId", "UserTypeName"),"User Type",new { @class = "form-control",style = "width: 40%;"})
+            </fieldset>
+            </p>
+            
+            <p class="px-2">
+                <fieldset class="row d-flex justify-content-center">
+                <input type="text" class="form-control" style="width:40%" name="Password" placeholder="Password" required>
+            </fieldset>
+            </p>
+            <p class="px-2">
+                <button type="submit" class="btn btn-primary float-center btn-inline">Submit</button>
+                <div class=""><a href= @Url.Action("Login","Account") class="card-link">Back to Login</a></div>
+            </p>
+        }
+    </div>
+</div>

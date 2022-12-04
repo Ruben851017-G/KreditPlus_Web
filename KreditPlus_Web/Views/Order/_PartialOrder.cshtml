@@ -1,0 +1,168 @@
+﻿@model KreditPlus_Web.Models.OrderDetail
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.Title = "Menu Create Order";
+}
+
+<div class="panel panel-inverse">
+     <div class="panel-heading">
+        <div class="panel-heading-btn">
+            <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-default" data-click="panel-expand"><i class="fa fa-expand"></i></a>
+            <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-success" data-click="panel-reload"><i class="fa fa-redo"></i></a>
+            <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-warning" data-click="panel-collapse"><i class="fa fa-minus"></i></a>
+            <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-danger" data-click="panel-remove"><i class="fa fa-times"></i></a>
+        </div>
+        <h4 class="panel-title">@ViewBag.Title</h4>
+    </div>
+    <section class="card-body">
+        <section id="form-container"> 
+            <section class="form-group"> 
+                <label>Menu:</label> 
+                @Html.DropDownListFor(m => m.MenuId, new SelectList(ViewBag.ListMenu, "MenuId", "MenuName"),"Menu",new { @class = "form-control",style = "width: 50%;"})
+            </section>
+            <section class="form-group">
+                <label>Table Number:</label>
+                @Html.TextBoxFor(model => model.TableNumber,new { @class = "form-control", @required = "true",style = "width: 50%;"})
+            </section>
+            <section class="form-group">
+                <label>Qty:</label>
+                @Html.TextBoxFor(model => model.Qty,new { @class = "form-control", @required = "true",style = "width: 50%;"})
+            </section>
+            <section class="form-group">    
+                    <a href="javascript:void(0)" class="text-info" id="AddTempOrderBtn">Add Order</a>    
+            </section>
+        </section>
+
+        <section id="MsnContainer">    
+            <section class="text-center">    
+                <label class="font-weight-bold text-danger" id="Msn"></label>    
+            </section>    
+        </section>   
+        
+        <section id="table-container">
+            <table class="table table-bordered table-striped" id="table-information"> 
+                <thead>
+                    <tr class="bg-info text-light font-weight-bold text-center">   
+                            <td>MenuId</td>
+                            <td>MenuName</td>
+                            <td>TableNumber</td>    
+                            <td>Qty</td>    
+                            <td></td> 
+                            <td></td> 
+                        </tr>
+                </thead>
+                <tbody id="table-body"></tbody>
+            </table>
+        </section>
+    </section>
+</div>
+@section Scripts
+{
+    <script type="text/javascript">
+        $(document).ready(function () { 
+            $('#AddTempOrderBtn').click(function () { AddTempOrder(); });
+            //$('#SubmitOrderBtn').click(function () { PostOrder(); }); 
+        });
+        function AddTempOrder()
+        {
+            var _Menuname = $("#MenuId option:selected").text(); 
+            var Order = {};
+            Order.Menu = $('#MenuId').val();
+            Order.MenuName = _Menuname;
+            Order.TableNumber = $('#TableNumber').val();
+            Order.Qty = $('#Qty').val();
+            var Errors = "";
+            if (Order.Menu.trim().length == 0)
+            {
+                Errors += "Menu is required.<br>"; 
+                $('#MenuId').addClass("border-danger");
+            }
+            else{
+                $('#MenuId').removeClass("border-danger");
+            }
+            
+            if (Order.TableNumber.trim().length == 0)
+            {
+                Errors += "TableNumber is required.<br>"; 
+                $('#TableNumber').addClass("border-danger");
+            }
+            else{
+                $('#TableNumber').removeClass("border-danger");
+            }
+            if (Order.Qty.trim().length == 0)
+            {
+                Errors += "Qty is required.<br>"; 
+                $('#Qty').addClass("border-danger");
+            }
+            else{
+                $('#Qty').removeClass("border-danger");
+            }
+            if (Errors.length > 0) 
+            {
+                ShowMsn(Errors); 
+                return false;
+            }
+
+            var ExistMenu = false;
+
+            $('#table-information > tbody  > tr').each(function() {
+                var Menu = $(this).find('.TitleCol').text();
+                if (Order.Menu.toLowerCase() == Menu.toLowerCase()) {
+                    ExistMenu = true;
+                    return false;
+                }
+            });
+
+            if (ExistMenu === false) {
+                ClearMsn();
+                var Row = $('<tr>');
+                $('<td>').html(Order.Menu).addClass("TitleCol").appendTo(Row);
+                $('<td>').html(Order.MenuName).appendTo(Row);
+                $('<td>').html(Order.TableNumber).appendTo(Row);
+                $('<td>').html(Order.Qty).appendTo(Row);
+                $('<td>').html("<div class='text-center'><button class='btn btn-danger btn-sm' onclick='Delete($(this))'>Remove</button></div>").appendTo(Row);
+                $('<td>').html("<div class='text-center'><button class='Edit btn btn-info btn-sm' onclick='Edit($(this))'>Update</button></div>").appendTo(Row);
+                $('#table-body').append(Row);
+                CheckSubmitBtn();
+            } 
+            else 
+            {
+                ShowMsn("Menu can not be duplicated.");
+            }
+            
+        }
+        function ClearForm() {  
+            $('#form-container input[type="text"]').val('');  
+        } 
+        function ShowMsn(message) {  
+            $('#Msn').html(message);  
+        }       
+        function ClearMsn() {  
+            $('#Msn').html("");  
+        } 
+        function Delete(row) {
+            row.closest('tr').remove();  
+            CheckSubmitBtn();  
+        } 
+        function CheckSubmitBtn()
+        {
+            if ($('#table-information > tbody  > tr').length > 0) {
+                $('#SubmitMoviesBtn').removeAttr("disabled");
+            } 
+            else 
+            {
+                $('#SubmitMoviesBtn').attr("disabled", "disabled"); 
+            }
+        }
+        $("body").on("click", "#table-information .Edit", function ()
+        {
+            var row = $(this).closest("tr");
+            $("td", row).each(function() {
+                if ($(this).find("input").length > 0) {
+                    $(this).find("input").show();
+                    $(this).find("span").hide();
+                }
+            });
+]        });
+    </script>
+}
